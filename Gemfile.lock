@@ -1,0 +1,36 @@
+PATH
+  remote: .
+  specs:
+    slurm (0.1.0)
+      net-ssh (~> 7.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    debug (1.7.2)
+      irb (>= 1.5.0)
+      reline (>= 0.3.1)
+    io-console (0.6.0)
+    irb (1.6.4)
+      reline (>= 0.3.0)
+    minitest (5.18.0)
+    mocha (2.0.2)
+      ruby2_keywords (>= 0.0.5)
+    net-ssh (7.1.0)
+    rake (13.0.6)
+    reline (0.3.3)
+      io-console (~> 0.5)
+    ruby2_keywords (0.0.5)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  debug
+  minitest (~> 5.0)
+  mocha
+  rake (~> 13.0)
+  slurm!
+
+BUNDLED WITH
+   2.4.8

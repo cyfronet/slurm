@@ -1,0 +1,25 @@
+HTTP/1.1 200 OK
+Content-Length: 363
+Content-Type: application/json
+
+{
+   "meta": {
+     "plugin": {
+       "type": "openapi\/v0.0.37",
+       "name": "Slurm OpenAPI v0.0.37"
+     },
+     "Slurm": {
+       "version": {
+         "major": 21,
+         "micro": 8,
+         "minor": 8
+       },
+       "release": "21.08.8-2"
+     }
+   },
+   "errors": [
+   ],
+   "job_id": 2447759,
+   "step_id": "BATCH",
+   "job_submit_user_msg": ""
+ }

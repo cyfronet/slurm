@@ -1,24 +1,66 @@
 # Slurm
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/slurm`. To experiment with that code, run `bin/console` for an interactive prompt.
+Remote (via SSH) slurm client.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+    $ bundle add slurm
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+    $ gem install slurm
 
 ## Usage
 
-TODO: Write usage instructions here
+Current version only adds `slurmrestd` via `local` (default right now) or `netssh`
+backends.
+
+To run a command on the `ares` supercomputer run following code e.g. in the
+`irb` console:
+
+```ruby
+require "slurm"
+require "json"
+
+backend = Slurm::Backends::Netssh.new("ares.cyfronet.pl", "plgusername")
+client = Slurm::Restd.new(backend)
+
+job_def = {
+  job: {
+    name: "test",
+    nodes: 1,
+    ntasks: 1,
+    account: "plgprimage4-cpu",
+    partition: "plgrid-now",
+    environment: { "ENV_VARIABLE" => "value" }
+  },
+  script: "#!/bin/bash\nid\nuname -a\ndate\n"
+}
+
+res = client.post("/slurm/v0.0.37/job/submit", JSON.generate(job_def), "Content-Type": "application/json")
+if res.code_type == Net::HTTPOK
+  job_details = JSON.parse(res.body)
+  puts client.get("/slurmdb/v0.0.37/job/#{job_details["job_id"]}").body
+else
+  puts "Error while submitting the job: #{res.body}"
+end
+
+# by using one ssh connection
+client.start do |conn|
+  res = conn.post("/slurm/v0.0.37/job/submit", JSON.generate(job_def), "Content-Type": "application/json")
+  if res.code_type == Net::HTTPOK
+    job_details = JSON.parse(res.body)
+    puts conn.get("/slurmdb/v0.0.37/job/#{job_details["job_id"]}").body
+  else
+    puts "Error while submitting the job: #{res.body}"
+  end
+end
+```
+Note: this script assumes, that you are able to login to ares without password.
+If this is not a case you can pass `password: yourpassword` option while
+initializing the backend.
 
 ## Development
 
