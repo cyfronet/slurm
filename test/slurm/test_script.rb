@@ -5,9 +5,10 @@ require "test_helper"
 class Slurm::TestScript < Minitest::Test
   RAW_SCRIPT = <<~SCRIPT
     #!/bin/bash
-    #SBATCH --time=00:00:10
+    #SBATCH --time=01:02:03
     #SBATCH -p plgrid-now
     #SBATCH -A plggrant-cpu
+    #SBATCH --mail-user=foo@bar.local
 
     echo hello
 
@@ -27,7 +28,10 @@ class Slurm::TestScript < Minitest::Test
   end
 
   def test_extract_options
-    options = { time_limit: "00:00:10", partition: "plgrid-now", account: "plggrant-cpu" }
+    options = { time_limit: 360 + 2 * 60 + 3,
+                partition: "plgrid-now",
+                account: "plggrant-cpu",
+                mail_user: "foo@bar.local" }
 
     assert_equal options, Slurm::Script.new(RAW_SCRIPT).options
   end

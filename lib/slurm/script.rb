@@ -2,10 +2,11 @@
 
 require "optparse"
 require "slurm/option_parser"
+require "json"
 
 class Slurm::Script
   SBATCH_LINE = /\A\s*#SBATCH .+/
-  SBATCH_KEY_VALUE = /\A\s*#SBATCH (?<key>-{1,2}[a-zA-z]*)(?<connector>=|\s*)(?<value>.*)/
+  SBATCH_KEY_VALUE = /\A\s*#SBATCH (?<key>-{1,2}[a-zA-z-]*)(?<connector>=|\s*)(?<value>.*)/
 
   def initialize(raw_script)
     @raw = raw_script
@@ -26,9 +27,16 @@ class Slurm::Script
                     "#{m[:key]}=#{m[:value]}"
                   end
                 end
-                  # .map { |kv| "#{kv[0]}=#{kv[1]}" }
 
     parse(args)
+  end
+
+  def to_h
+    { job: { environment: { "HPCKIT" => true} }.merge(options), script: script }
+  end
+
+  def to_json
+    JSON.generate to_h
   end
 
   private
