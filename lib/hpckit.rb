@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "hpckit/version"
-require_relative "hpckit/slurm/backends/netssh"
-require_relative "hpckit/slurm/backends/local"
-require_relative "hpckit/slurm/restd"
-require_relative "hpckit/slurm/script"
+require "zeitwerk"
+loader = Zeitwerk::Loader.for_gem
+loader.inflector.inflect "hpckit" => "HPCKit"
+loader.setup
 
 module HPCKit
   class Error < StandardError; end

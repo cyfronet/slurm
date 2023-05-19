@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir["lib/**/*", "MIT-LICENSE", "README.md"]
 
   spec.add_dependency "net-ssh", "~> 7.0"
+  spec.add_dependency "zeitwerk", "~> 2.5"
 
   spec.add_development_dependency "debug"
   spec.add_development_dependency "mocha"

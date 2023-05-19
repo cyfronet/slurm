@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "optparse"
-require "hpckit/slurm/sbatch_parser"
 
 class HPCKit::Slurm::OptionParser
   attr_reader :options

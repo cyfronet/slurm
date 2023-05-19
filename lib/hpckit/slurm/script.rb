@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "optparse"
-require "hpckit/slurm/option_parser"
 require "json"
 
 class HPCKit::Slurm::Script

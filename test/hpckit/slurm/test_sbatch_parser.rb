@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "hpckit/slurm/sbatch_parser"
 
 class HPCKit::Slurm::TestSbatchParser < Minitest::Test
   def test_minutes_to_seconds
