@@ -5,7 +5,7 @@ require "json"
 
 class HPCKit::Slurm::Script
   SBATCH_LINE = /\A\s*#SBATCH .+/
-  SBATCH_KEY_VALUE = /\A\s*#SBATCH (?<key>-{1,2}[a-zA-z-]*)(?<connector>=|\s*)(?<value>.*)/
+  SBATCH_KEY_VALUE = /\A\s*#SBATCH (?<key>-{1,2}[a-zA-Z-]*)(=|\s)+(?<value>.*)/
 
   def initialize(raw_script)
     @raw = raw_script
