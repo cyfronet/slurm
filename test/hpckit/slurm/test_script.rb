@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class Slurm::TestScript < Minitest::Test
+class HPCKit::Slurm::TestScript < Minitest::Test
   RAW_SCRIPT = <<~SCRIPT
     #!/bin/bash
     #SBATCH --time=01:02:03
@@ -24,7 +24,7 @@ class Slurm::TestScript < Minitest::Test
       exit 0
     SCRIPT
 
-    assert_equal script, Slurm::Script.new(RAW_SCRIPT).script
+    assert_equal script, HPCKit::Slurm::Script.new(RAW_SCRIPT).script
   end
 
   def test_extract_options
@@ -33,6 +33,6 @@ class Slurm::TestScript < Minitest::Test
                 account: "plggrant-cpu",
                 mail_user: "foo@bar.local" }
 
-    assert_equal options, Slurm::Script.new(RAW_SCRIPT).options
+    assert_equal options, HPCKit::Slurm::Script.new(RAW_SCRIPT).options
   end
 end

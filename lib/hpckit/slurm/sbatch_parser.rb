@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Slurm
+module HPCKit::Slurm
   # = Slurm \SbatchParser
   #
   # Praser between options format accepted by the sbatch and options accepted by

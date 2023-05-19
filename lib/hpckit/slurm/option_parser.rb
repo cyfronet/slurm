@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require "optparse"
-require "slurm/sbatch_parser"
+require "hpckit/slurm/sbatch_parser"
 
-class Slurm::OptionParser
+class HPCKit::Slurm::OptionParser
   attr_reader :options
 
   def initialize(args)
@@ -96,7 +96,7 @@ class Slurm::OptionParser
       end
 
       def seconds
-        Slurm::SbatchParser.parse_time(@time)
+        HPCKit::Slurm::SbatchParser.parse_time(@time)
       end
     end
 end

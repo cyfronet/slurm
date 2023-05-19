@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require "optparse"
-require "slurm/option_parser"
+require "hpckit/slurm/option_parser"
 require "json"
 
-class Slurm::Script
+class HPCKit::Slurm::Script
   SBATCH_LINE = /\A\s*#SBATCH .+/
   SBATCH_KEY_VALUE = /\A\s*#SBATCH (?<key>-{1,2}[a-zA-z-]*)(?<connector>=|\s*)(?<value>.*)/
 
@@ -41,6 +41,6 @@ class Slurm::Script
 
   private
     def parse(args)
-      Slurm::OptionParser.new(args).options
+      HPCKit::Slurm::OptionParser.new(args).options
     end
 end

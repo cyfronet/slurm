@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require_relative "lib/slurm/version"
+require_relative "lib/hpckit/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "slurm"
-  spec.version = Slurm::VERSION
+  spec.name = "hpckit"
+  spec.version = HPCKit::VERSION
   spec.authors = ["Marek Kasztelnik"]
   spec.email = ["mkasztelnik@gmail.com"]
 
-  spec.summary = "Slurm client for running jobs on HPC infrastructures"
-  spec.description = "Run HPC jobs from the local computer without struggles."
-  spec.homepage = "https://github.com/cyfronet/slurm"
+  spec.summary = "HPCKit makes it easy to interact with the HPC infrastructure via ssh"
+  spec.description = "Manage HPC jobs from the local computer without struggles."
+  spec.homepage = "https://github.com/cyfronet/hpckit"
   spec.license = "MIT"
 
   spec.files = Dir["lib/**/*", "MIT-LICENSE", "README.md"]

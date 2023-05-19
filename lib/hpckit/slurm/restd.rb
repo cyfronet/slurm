@@ -3,7 +3,7 @@
 require "stringio"
 require "net/http"
 
-module Slurm
+module HPCKit::Slurm
   # = Slurm \Restd
   #
   # +slurmrestd+ client via different backends. By the backend we understand a
@@ -52,7 +52,7 @@ module Slurm
     #   [+Slurm::Backends::Netssh+] It connects to the remote server via +ssh+
     #   and invokes +slurmrestd+ there. It can use your ssh key or you can pass
     #   username/password.
-    def initialize(backend = Slurm::Backends::Local.new)
+    def initialize(backend = HPCKit::Slurm::Backends::Local.new)
       @backend = backend
     end
 
@@ -150,9 +150,9 @@ module Slurm
             res.uri = req.uri
             res.reading_body(socket, req.response_body_permitted?) {}
             res
-          rescue Slurm::Backends::AuthenticationError => e
+          rescue HPCKit::Slurm::Backends::AuthenticationError => e
             Net::HTTPUnauthorized.new(HTTP_VERSION, 401, e.message)
-          rescue Slurm::Backends::ExecutionError => e
+          rescue HPCKit::Slurm::Backends::ExecutionError => e
             Net::HTTPServerError.new(HTTP_VERSION, 500, e.message)
           end
       end

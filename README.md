@@ -1,16 +1,16 @@
-# Slurm
+# HPCKit
 
-Remote (via SSH) slurm client.
+Manage HPC jobs for the local computer without struggles.
 
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add slurm
+    $ bundle add hpckit
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install slurm
+    $ gem install hpckit
 
 ## Usage
 
@@ -21,11 +21,11 @@ To run a command on the `ares` supercomputer run following code e.g. in the
 `irb` console:
 
 ```ruby
-require "slurm"
+require "hpckit"
 require "json"
 
-backend = Slurm::Backends::Netssh.new("ares.cyfronet.pl", "plgusername")
-client = Slurm::Restd.new(backend)
+backend = HPCKit::Slurm::Backends::Netssh.new("ares.cyfronet.pl", "plgusername")
+client = HPCKit::Slurm::Restd.new(backend)
 
 job_def = {
   job: {
@@ -78,4 +78,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Slurm project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/slurm/blob/main/CODE_OF_CONDUCT.md).
+Everyone interacting in the SSHKit project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/slurm/blob/main/CODE_OF_CONDUCT.md).

@@ -3,13 +3,13 @@
 require "test_helper"
 require "json"
 
-class Slurm::TestRestd < Minitest::Test
+class HPCKit::Slurm::TestRestd < Minitest::Test
   def setup
     @conn = Object.new
     backend = Object.new
     backend.expects(:start).yields(@conn)
 
-    @client = Slurm::Restd.new(backend)
+    @client = HPCKit::Slurm::Restd.new(backend)
   end
 
   def test_success_get_invocation
@@ -65,14 +65,14 @@ class Slurm::TestRestd < Minitest::Test
   end
 
   def test_wrong_credentials
-    @conn.expects(:run).raises(Slurm::Backends::AuthenticationError, "wrong credentials")
+    @conn.expects(:run).raises(HPCKit::Slurm::Backends::AuthenticationError, "wrong credentials")
     response = @client.get("/get/path")
 
     assert 401, response.code
   end
 
   def test_slurmrestd_error
-    @conn.expects(:run).raises(Slurm::Backends::ExecutionError, "return code != 0")
+    @conn.expects(:run).raises(HPCKit::Slurm::Backends::ExecutionError, "return code != 0")
     response = @client.get("/get/path")
 
     assert 500, response.code
