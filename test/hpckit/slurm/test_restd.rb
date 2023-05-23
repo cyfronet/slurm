@@ -2,21 +2,18 @@
 
 require "test_helper"
 require "json"
+require "hpckit/slurm/backends/mock"
 
 class HPCKit::Slurm::TestRestd < Minitest::Test
   def setup
-    @conn = Object.new
-    backend = Object.new
-    backend.expects(:start).yields(@conn)
-
-    @client = HPCKit::Slurm::Restd.new(backend)
+    @backend = HPCKit::Slurm::Backends::Mock.new
+    @client = HPCKit::Slurm::Restd.new(@backend)
   end
 
   def test_success_get_invocation
-    @conn.expects(:run).with do |value|
-      value.include?("GET /get/path HTTP/1.1") &&
-        value.include?("My-Header: my-header-value")
-    end.returns(File.read("test/fixtures/200_jobs_status.txt"))
+    @backend.expects_get("/get/path",
+                      File.read("test/fixtures/200_jobs_status.txt"),
+                      headers: { "My-Header" => "my-header-value" })
 
     response = @client.get("/get/path", "my-header" => "my-header-value")
 
@@ -26,13 +23,9 @@ class HPCKit::Slurm::TestRestd < Minitest::Test
   end
 
   def test_success_post_invocation
-    @conn.expects(:run).with do |value|
-      value.include?("POST /slurm/v0.0.37/job/submit HTTP/1.1") &&
-        value.include?("Content-Type: application/json") &&
-        value.include?("data-payload")
-    end.returns(File.read("test/fixtures/200_job_created_response.txt"))
+    @backend.expects_post("/post/path", File.read("test/fixtures/200_job_created_response.txt"))
 
-    response = @client.post("/slurm/v0.0.37/job/submit", "data-payload", "Content-Type" => "application/json")
+    response = @client.post("/post/path", "data-payload", "Content-Type" => "application/json")
 
     assert 200, response.code
     assert "application/json", response["Content-Type"]
@@ -40,23 +33,16 @@ class HPCKit::Slurm::TestRestd < Minitest::Test
   end
 
   def test_success_delete_invocation
-    @conn.expects(:run).with do |value|
-      value.include?("DELETE /slurm/v0.0.37/job/1234 HTTP/1.1")
-    end.returns(File.read("test/fixtures/204.txt"))
+    @backend.expects_delete("/delete/path", File.read("test/fixtures/204.txt"))
 
-    response = @client.delete("/slurm/v0.0.37/job/1234")
+    response = @client.delete("/delete/path")
 
     assert 204, response.code
   end
 
   def test_many_requests_in_one_connection
-    @conn.expects(:run).with do |value|
-      value.include?("GET /get/path1 HTTP/1.1")
-    end.returns(File.read("test/fixtures/200_jobs_status.txt"))
-
-    @conn.expects(:run).with do |value|
-      value.include?("GET /get/path2 HTTP/1.1")
-    end.returns(File.read("test/fixtures/204.txt"))
+    @backend.expects_get("/get/path1", File.read("test/fixtures/200_jobs_status.txt"))
+    @backend.expects_get("/get/path2", File.read("test/fixtures/204.txt"))
 
     @client.start do |conn|
       assert 200, conn.get("/get/path1").code
@@ -65,14 +51,16 @@ class HPCKit::Slurm::TestRestd < Minitest::Test
   end
 
   def test_wrong_credentials
-    @conn.expects(:run).raises(HPCKit::Slurm::Backends::AuthenticationError, "wrong credentials")
+    @backend.expects_raise(HPCKit::Slurm::Backends::AuthenticationError, "wrong credentials")
+
     response = @client.get("/get/path")
 
     assert 401, response.code
   end
 
   def test_slurmrestd_error
-    @conn.expects(:run).raises(HPCKit::Slurm::Backends::ExecutionError, "return code != 0")
+    @backend.expects_raise(HPCKit::Slurm::Backends::ExecutionError, "return code != 0")
+
     response = @client.get("/get/path")
 
     assert 500, response.code
