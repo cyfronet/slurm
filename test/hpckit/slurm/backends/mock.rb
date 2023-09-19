@@ -9,6 +9,10 @@ class HPCKit::Slurm::Backends::Mock
     yield @conn
   end
 
+  def expects_submit(response_body)
+    expects_post("/slurm/#{version}/job/submit", response_body)
+  end
+
   def expects_get(path, response_body, headers: {})
     @conn.expects(:run).with do |value|
       value.include?("GET #{path} HTTP/1.1") &&
@@ -20,7 +24,7 @@ class HPCKit::Slurm::Backends::Mock
     @conn.expects(:run).with do |value|
       value.include?("POST #{path} HTTP/1.1") &&
         value.include?("Content-Type: application/json") &&
-        value.include?("data-payload")
+        block_given? ? yield(value) : true
     end.returns(response_body)
   end
 
@@ -33,4 +37,9 @@ class HPCKit::Slurm::Backends::Mock
   def expects_raise(exception, message = "return code != 0")
     @conn.expects(:run).raises(HPCKit::Slurm::Backends::ExecutionError, message)
   end
+
+  private
+    def version
+      HPCKit::Slurm::Client::SLURM_RESTD_VERSION
+    end
 end
