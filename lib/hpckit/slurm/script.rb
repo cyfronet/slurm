@@ -7,8 +7,9 @@ class HPCKit::Slurm::Script
   SBATCH_LINE = /\A\s*#SBATCH .+/
   SBATCH_KEY_VALUE = /\A\s*#SBATCH (?<key>-{1,2}[a-zA-Z-]*)(=|\s)+(?<value>.*)/
 
-  def initialize(raw_script)
+  def initialize(raw_script, options_overrides = {})
     @raw = raw_script
+    @options_overrides = options_overrides
   end
 
   def script
@@ -27,7 +28,7 @@ class HPCKit::Slurm::Script
                   end
                 end
 
-    parse(args)
+    parse(args).merge(@options_overrides)
   end
 
   def to_h

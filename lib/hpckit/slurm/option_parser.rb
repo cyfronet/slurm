@@ -95,7 +95,12 @@ class HPCKit::Slurm::OptionParser
       end
 
       def seconds
-        HPCKit::Slurm::SbatchParser.parse_time(@time)
+        to_uint32_no_val(HPCKit::Slurm::SbatchParser.parse_time(@time))
       end
+
+      private
+        def to_uint32_no_val(seconds)
+          { set: true, infinite: false, number: seconds }
+        end
     end
 end
