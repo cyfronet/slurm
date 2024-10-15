@@ -4,7 +4,7 @@ require "test_helper"
 require "json"
 require "hpckit/slurm/backends/mock"
 
-class HPCKit::Slurm::TestRestd < Minitest::Test
+class HPCKit::Slurm::RestdTest < Minitest::Test
   def setup
     @backend = HPCKit::Slurm::Backends::Mock.new
     @client = HPCKit::Slurm::Restd.new(@backend)

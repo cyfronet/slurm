@@ -6,12 +6,13 @@ require "hpckit/slurm/backends/mock"
 class HPCKit::Slurm::TestClient < Minitest::Test
   def setup
     @backend = HPCKit::Slurm::Backends::Mock.new
-    @client = HPCKit::Slurm::Client.new(@backend)
+    restd = HPCKit::Slurm::Restd.new(@backend)
+    @client = HPCKit::Slurm::Client.new(restd)
   end
 
   def test_submit_a_new_job
-    @backend.expects_submit(File.read("test/fixtures/200_job_created_response.txt"))
-    job_script = File.read("test/fixtures/script.bash")
+    @backend.expects_submit fixture("200_job_created_response.txt")
+    job_script = fixture("script.bash")
 
     job = @client.submit job_script
 
@@ -20,8 +21,8 @@ class HPCKit::Slurm::TestClient < Minitest::Test
   end
 
   def test_submit_an_array_job
-    @backend.expects_submit(File.read("test/fixtures/200_array_job_created_response.txt"))
-    job_script = File.read("test/fixtures/array.bash")
+    @backend.expects_submit fixture("200_array_job_created_response.txt")
+    job_script = fixture("array.bash")
 
     job = @client.submit job_script
 
